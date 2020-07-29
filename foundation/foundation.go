@@ -12,10 +12,6 @@ void* NSObject_instanceMethodSignatureForSelector(void* obj, _GoString_ sel) {
 	return [[((NSObject*)obj) class] instanceMethodSignatureForSelector:NSSelectorFromString([[NSString alloc] initWithBytes:_GoStringPtr(sel) length:_GoStringLen(sel) encoding:NSUTF8StringEncoding])];
 }
 
-void* NSObject_methodSignatureForSelector(void* obj, _GoString_ sel) {
-	return [((NSObject*)obj) methodSignatureForSelector:NSSelectorFromString([[NSString alloc] initWithBytes:_GoStringPtr(sel) length:_GoStringLen(sel) encoding:NSUTF8StringEncoding])];
-}
-
 void* NSObject_performSelectorWithObjectWithObject(void* obj, _GoString_ sel, void* with1, void* with2) {
 	return [(NSObject*)obj performSelector:NSSelectorFromString([[NSString alloc] initWithBytes:_GoStringPtr(sel) length:_GoStringLen(sel) encoding:NSUTF8StringEncoding])
 			withObject: (NSObject*)with1 withObject: (NSObject*)with2];
@@ -47,12 +43,16 @@ type NSObject struct {
 	Ptr unsafe.Pointer
 }
 
+func (obj NSObject) Release() { //TODO: make sure this is working
+	obj.PerformSelector("release")
+}
+
 func (obj NSObject) InstanceMethodSignatureForSelector(selector string) NSMethodSignature {
 	return NSMethodSignature{NSObject{C.NSObject_instanceMethodSignatureForSelector(obj.Ptr, selector)}}
 }
 
 func (obj NSObject) MethodSignatureForSelector(selector string) NSMethodSignature {
-	return NSMethodSignature{NSObject{C.NSObject_methodSignatureForSelector(obj.Ptr, selector)}}
+	return NSMethodSignature{NSObject: obj.PerformSelectorWithObject("methodSignatureForSelector:", NSObject{NSSelectorFromString(NewNSString(selector))})} //HACK to send selector through performSelector:
 }
 
 func (obj NSObject) PerformSelector(sel string) NSObject {
@@ -101,7 +101,7 @@ func (str NSString) Init() NSString {
 }
 
 func (str NSString) InitWithBytesLengthEncoding(bytes []byte, len int, encoding NSStringEncoding) NSString {
-	//- initWithBytes:length:encoding: //TODO: implement
+	//- initWithBytes:length:encoding: //TODO: make this actually work
 	selector := "initWithBytes:length:encoding:"
 	sig := str.MethodSignatureForSelector(selector)
 	inv := InvocationWithMethodSignature(sig)

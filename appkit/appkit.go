@@ -28,6 +28,11 @@ func (m NSMenu) Alloc() NSMenu {
 	return m
 }
 
+func (m NSMenu) InitWithTitle(title foundation.NSString) NSMenu {
+	m.PerformSelectorWithObject("initWithTitle:", title.NSObject) //TODO: test to make sure this works
+	return m
+}
+
 func (m NSMenu) AddItem(item NSMenuItem) {
 	m.PerformSelectorWithObject("addItem:", item.NSObject)
 }
