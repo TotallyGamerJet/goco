@@ -43,7 +43,7 @@ func (win NSWindow) CascadeTopLeftFromPoint(topLeftPoint foundation.NSPoint) fou
 	sig := win.MethodSignatureForSelector(selector)
 	inv := foundation.InvocationWithMethodSignature(sig)
 	inv.SetSelector(selector)
-	inv.SetArgumentAtIndex(unsafe.Pointer(&topLeftPoint.Point), 2)
+	inv.SetArgumentAtIndex(unsafe.Pointer(&topLeftPoint), 2)
 	inv.InvokeWithTarget(win.NSObject)
 	//return foundation.NSPoint{Point: *(*C.NSPoint)(inv.GetReturnValue())}
 	return foundation.NSPoint{} //TODO: get return NSPoint

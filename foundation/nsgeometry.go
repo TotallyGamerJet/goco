@@ -3,22 +3,21 @@ package foundation
 /*
 #import <Foundation/NSGeometry.h>
 */
-import "C"
 
 //TODO: NSPoint methods
 type NSPoint struct {
-	Point C.NSPoint
+	x, y float64
 }
 
 func NSMakePoint(x, y float64) NSPoint {
-	return NSPoint{Point: C.NSMakePoint(C.double(x), C.double(y))}
+	return NSPoint{x, y} //Point: C.NSMakePoint(C.double(x), C.double(y))}
 }
 
 //TODO: NSRect methods
 type NSRect struct {
-	Rect C.NSRect
+	x, y, width, height float64
 }
 
 func NSMakeRect(x, y, width, height float64) NSRect {
-	return NSRect{Rect: C.NSMakeRect(C.double(x), C.double(y), C.double(width), C.double(height))}
+	return NSRect{x, y, width, height} //Rect: C.NSMakeRect(C.double(x), C.double(y), C.double(width), C.double(height))}
 }
