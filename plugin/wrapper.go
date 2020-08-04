@@ -32,10 +32,6 @@ void NSInvocation_setTarget(void* inv, void* target) {
 	[(NSInvocation*)inv setTarget:target];
 }
 
-//void NSInvocation_setTargetClass(void* inv, _GoString_ target) {
-//	[(NSInvocation*)inv setTarget:NSClassFromString([[NSString alloc] initWithBytes:_GoStringPtr(target) length:_GoStringLen(target) encoding:NSUTF8StringEncoding])];
-//}
-
 void NSInvocation_setSelector(void* inv, _GoString_ sel) {
 	[(NSInvocation*)inv setSelector:NSSelectorFromString([[NSString alloc] initWithBytes:_GoStringPtr(sel) length:_GoStringLen(sel) encoding:NSUTF8StringEncoding])];
 }
