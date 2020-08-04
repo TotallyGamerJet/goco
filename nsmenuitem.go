@@ -7,11 +7,7 @@ type NSMenuItem struct {
 }
 
 func (item NSMenuItem) Alloc() NSMenuItem {
-	selector := "alloc"
-	inv := InvocationWithMethodSignature("NSMenuItem", selector)
-	inv.SetSelector(selector)
-	inv.InvokeWithTarget(NSClassFromString("NSMenuItem"))
-	item.NSObject = NSObject{inv.GetReturnValue()}
+	item.NSObject = NSObject{InvokeAndReturn("NSMenuItem", "alloc", NSClassFromString("NSMenuItem"))}
 	return item
 }
 

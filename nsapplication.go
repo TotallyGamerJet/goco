@@ -9,11 +9,7 @@ type NSApplication struct {
 }
 
 func (app NSApplication) SharedApplication() NSApplication {
-	selector := "sharedApplication"
-	inv := InvocationWithMethodSignature("NSApplication", selector)
-	inv.SetSelector(selector)
-	inv.InvokeWithTarget(NSClassFromString("NSApplication"))
-	app.NSObject = NSObject{inv.GetReturnValue()}
+	app.NSObject = NSObject{InvokeAndReturn("NSApplication", "sharedApplication", NSClassFromString("NSApplication"))}
 	return app
 }
 
@@ -43,10 +39,7 @@ func (app NSApplication) SetMainMenu(menu NSMenu) {
 }
 
 func (app NSApplication) Run() {
-	selector := "run"
-	inv := InvocationWithMethodSignature("NSApplication", selector)
-	inv.SetSelector(selector)
-	inv.InvokeWithTarget(app.ptr)
+	Invoke("NSApplication", "run", app.ptr)
 }
 
 /*

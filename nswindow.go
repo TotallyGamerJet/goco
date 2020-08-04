@@ -9,11 +9,7 @@ type NSWindow struct {
 }
 
 func (win NSWindow) Alloc() NSWindow {
-	selector := "alloc"
-	inv := InvocationWithMethodSignature("NSWindow", selector)
-	inv.SetSelector(selector)
-	inv.InvokeWithTarget(NSClassFromString("NSWindow"))
-	win.NSObject = NSObject{inv.GetReturnValue()}
+	win.NSObject = NSObject{InvokeAndReturn("NSWindow", "alloc", NSClassFromString("NSWindow"))}
 	return win
 }
 

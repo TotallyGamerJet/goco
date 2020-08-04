@@ -7,7 +7,9 @@ import (
 
 var NSClassFromString = plugin.NSClassFromString
 var NSSelectorFromString = plugin.NSSelectorFromString
-var NSStringNew = plugin.NSString_goString
+var NSStringNew = plugin.NsstringGostring
+var InvokeAndReturn = plugin.InvokeAndReturn
+var Invoke = plugin.Invoke
 
 type NSInvocation interface {
 	SetArgumentAtIndex(arg unsafe.Pointer, index int)

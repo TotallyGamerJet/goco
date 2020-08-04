@@ -71,6 +71,56 @@ void* NSString_goString(_GoString_ str) {
 	return [[NSString alloc] initWithBytes:_GoStringPtr(str) length:_GoStringLen(str) encoding:NSUTF8StringEncoding];
 }
 
+void* NSInvocation_invokeAndReturn(_GoString_ className, _GoString_ selector, void* target) {
+	NSString* clsStr = [[NSString alloc] initWithBytes:_GoStringPtr(className) length:_GoStringLen(className) encoding:NSUTF8StringEncoding];
+	Class cls = NSClassFromString(clsStr);
+	if (cls == nil) {
+		NSLog(@"class is nil %@", clsStr);
+	}
+	NSString* selStr = [[NSString alloc] initWithBytes:_GoStringPtr(selector) length:_GoStringLen(selector) encoding:NSUTF8StringEncoding];
+	SEL sel = NSSelectorFromString(selStr);
+	if (sel == nil) {
+		NSLog(@"sel is nil %@", selStr);
+	}
+	NSMethodSignature* sig = [cls methodSignatureForSelector:sel];
+	if (sig == nil) {
+		sig = [cls instanceMethodSignatureForSelector:sel];
+		if (sig == nil) {
+			NSLog(@"could not find method signature for %@ %@", clsStr, selStr);
+		}
+	}
+	NSInvocation* inv =  [NSInvocation invocationWithMethodSignature:sig];
+	[inv setSelector:sel];
+	[inv invokeWithTarget:target];
+	void* tempResult;
+	[inv getReturnValue:&tempResult];
+	void* out = (__bridge void*)tempResult;
+	return out;
+}
+
+void NSInvocation_justInvoke(_GoString_ className, _GoString_ selector, void* target) {
+	NSString* clsStr = [[NSString alloc] initWithBytes:_GoStringPtr(className) length:_GoStringLen(className) encoding:NSUTF8StringEncoding];
+	Class cls = NSClassFromString(clsStr);
+	if (cls == nil) {
+		NSLog(@"class is nil %@", clsStr);
+	}
+	NSString* selStr = [[NSString alloc] initWithBytes:_GoStringPtr(selector) length:_GoStringLen(selector) encoding:NSUTF8StringEncoding];
+	SEL sel = NSSelectorFromString(selStr);
+	if (sel == nil) {
+		NSLog(@"sel is nil %@", selStr);
+	}
+	NSMethodSignature* sig = [cls methodSignatureForSelector:sel];
+	if (sig == nil) {
+		sig = [cls instanceMethodSignatureForSelector:sel];
+		if (sig == nil) {
+			NSLog(@"could not find method signature for %@ %@", clsStr, selStr);
+		}
+	}
+	NSInvocation* inv =  [NSInvocation invocationWithMethodSignature:sig];
+	[inv setSelector:sel];
+	[inv invokeWithTarget:target];
+}
+
 */
 import "C"
 import "unsafe"
@@ -108,11 +158,6 @@ func (inv NSInvocation) SetTarget(target unsafe.Pointer) {
 	C.NSInvocation_setTarget(inv.Ptr, target)
 }
 
-/*
-func (inv NSInvocation) SetTargetClass(target string) {
-	C.NSInvocation_setTargetClass(inv.Ptr, target)
-}*/
-
 func (inv NSInvocation) Invoke() {
 	C.NSInvocation_invoke(inv.Ptr)
 }
@@ -128,6 +173,20 @@ func (inv NSInvocation) GetReturnValue() unsafe.Pointer {
 	return C.NSInvocation_getReturnValue(inv.Ptr)
 }
 
-func NSString_goString(str string) unsafe.Pointer {
+func NsstringGostring(str string) unsafe.Pointer {
 	return C.NSString_goString(str)
+}
+
+func InvokeAndReturn(className, selector string, target unsafe.Pointer, _ ...unsafe.Pointer) unsafe.Pointer { //TODO: use args
+	if target == nil {
+		panic("target is nil")
+	}
+	return C.NSInvocation_invokeAndReturn(className, selector, target)
+}
+
+func Invoke(className, selector string, target unsafe.Pointer, _ ...unsafe.Pointer) { //TODO: use args
+	if target == nil {
+		panic("target is nil")
+	}
+	C.NSInvocation_justInvoke(className, selector, target)
 }
