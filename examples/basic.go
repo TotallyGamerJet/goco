@@ -4,6 +4,7 @@ import (
 	. "goco"
 )
 
+//Inspired by this: https://gist.github.com/cstrahan/8cf0002a8b6474f3f5f58e400eec16cf
 func main() {
 	app := NSApplication{}.SharedApplication()
 	app.SetActivationPolicy(NSApplicationActivationPolicyRegular)
