@@ -1,19 +1,22 @@
 // +build ignore
 
-package goco
+package foundation
 
-import "unsafe"
+import (
+	"goco"
+	"unsafe"
+)
 
 type NSData struct {
-	NSObject
+	goco.NSObject
 }
 
 func (data NSData) Alloc() NSData {
 	selector := "alloc"
-	inv := InvocationWithMethodSignature("NSData", selector)
+	inv := goco.InvocationWithMethodSignature("NSData", selector)
 	inv.SetSelector(selector)
-	inv.InvokeWithTarget(NSClassFromString("NSData"))
-	data.NSObject = NSObject{inv.GetReturnValue()}
+	inv.InvokeWithTarget(goco.NSClassFromString("NSData"))
+	data.NSObject = goco.NSObject{inv.GetReturnValue()}
 	return data
 }
 
@@ -22,7 +25,7 @@ func (data NSData) DataWithBytesLength(bytes []byte, length int) NSData {
 		panic("not enough bytes")
 	}
 	selector := "dataWithBytes:length:"
-	inv := InvocationWithMethodSignature("NSData", selector)
+	inv := goco.InvocationWithMethodSignature("NSData", selector)
 	inv.SetSelector(selector)
 	inv.SetArgumentAtIndex(unsafe.Pointer(&bytes[0]), 2)
 	inv.SetArgumentAtIndex(unsafe.Pointer(&length), 3)

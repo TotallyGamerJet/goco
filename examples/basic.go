@@ -1,7 +1,8 @@
 package main
 
 import (
-	. "goco"
+	. "goco/appkit"
+	. "goco/foundation"
 )
 
 //Inspired by this: https://gist.github.com/cstrahan/8cf0002a8b6474f3f5f58e400eec16cf

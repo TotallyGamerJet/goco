@@ -2,7 +2,7 @@ package plugin
 
 /*
 #cgo CFLAGS: -x objective-c
-#cgo LDFLAGS: -framework Cocoa -lobjc
+#cgo LDFLAGS: -framework Cocoa
 
 #import <Foundation/NSInvocation.h>
 #import <Foundation/NSString.h>
@@ -94,7 +94,7 @@ void* NSInvocation_invokeAndReturn(_GoString_ className, _GoString_ selector, vo
 	return out;
 }
 
-void NSInvocation_justInvoke(_GoString_ className, _GoString_ selector, void* target) {
+void NSInvocation_justInvoke(_GoString_ className, _GoString_ selector,void* target, void* a, void* b, void* c) {
 	NSString* clsStr = [[NSString alloc] initWithBytes:_GoStringPtr(className) length:_GoStringLen(className) encoding:NSUTF8StringEncoding];
 	Class cls = NSClassFromString(clsStr);
 	if (cls == nil) {
@@ -114,12 +114,23 @@ void NSInvocation_justInvoke(_GoString_ className, _GoString_ selector, void* ta
 	}
 	NSInvocation* inv =  [NSInvocation invocationWithMethodSignature:sig];
 	[inv setSelector:sel];
+	if (a != nil) {
+		[inv setArgument:a atIndex:2];
+		if(b != nil) {
+			[inv setArgument:b atIndex:3];
+			if (c != nil) {
+				[inv setArgument:c atIndex:4];
+			}
+		}
+	}
 	[inv invokeWithTarget:target];
 }
 
 */
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 //NSSelectorFromString gets a selector for the string. DON'T take the address of any variables
 //that you assign to this.
@@ -180,9 +191,26 @@ func InvokeAndReturn(className, selector string, target unsafe.Pointer, _ ...uns
 	return C.NSInvocation_invokeAndReturn(className, selector, target)
 }
 
-func Invoke(className, selector string, target unsafe.Pointer, _ ...unsafe.Pointer) { //TODO: use args
+func Invoke(className, selector string, target unsafe.Pointer, args ...unsafe.Pointer) { //TODO: use args
 	if target == nil {
 		panic("target is nil")
 	}
-	C.NSInvocation_justInvoke(className, selector, target)
+	if len(args) > 3 {
+		panic("more than 3 arguments supplied")
+	}
+	var a, b, c unsafe.Pointer
+	switch len(args) {
+	case 3:
+		c = args[2]
+		fallthrough
+	case 2:
+		b = args[1]
+		fallthrough
+	case 1:
+		a = args[0]
+	}
+	C.NSInvocation_justInvoke(className, selector, target, a, b, c)
 }
+
+//helpful links
+//https://stackoverflow.com/questions/904515/how-to-use-performselectorwithobjectafterdelay-with-primitive-types-in-cocoa

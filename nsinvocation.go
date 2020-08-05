@@ -15,7 +15,6 @@ type NSInvocation interface {
 	SetArgumentAtIndex(arg unsafe.Pointer, index int)
 	SetSelector(sel string)
 	SetTarget(target unsafe.Pointer)
-	//SetTargetClass(target string)
 	Invoke()
 	InvokeWithTarget(target unsafe.Pointer)
 	GetReturnValue() unsafe.Pointer

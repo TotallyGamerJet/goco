@@ -1,7 +1,9 @@
-package goco
+package foundation
+
+import "goco"
 
 type NSString struct {
-	NSObject
+	goco.NSObject
 }
 
 /*
@@ -28,7 +30,7 @@ func (str NSString) Go(goStr string) NSString { //TODO: figure out an actual imp
 	/*bytes := []byte(goStr)
 	data := NSData{}.Alloc().DataWithBytesLength(bytes, len(bytes))
 	return str.Alloc().InitWithDataEncoding(data, NSUTF8StringEncoding)*/
-	return NSString{NSObject{ptr: NSStringNew(goStr)}}
+	return NSString{goco.NSObject{Ptr: goco.NSStringNew(goStr)}}
 }
 
 //Impossible because: https://stackoverflow.com/questions/27630390/calls-to-instancemethodsignatureforselector-return-nil-why

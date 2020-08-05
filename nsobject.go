@@ -5,5 +5,13 @@ import (
 )
 
 type NSObject struct {
-	ptr unsafe.Pointer
+	Ptr unsafe.Pointer
+}
+
+func (obj NSObject) Release() {
+	Invoke("NSObject", "release", obj.Ptr)
+}
+
+func (obj NSObject) Retain() {
+	Invoke("NSObject", "retain", obj.Ptr)
 }

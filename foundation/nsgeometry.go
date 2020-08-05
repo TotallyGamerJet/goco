@@ -1,4 +1,4 @@
-package goco
+package foundation
 
 import "fmt"
 
