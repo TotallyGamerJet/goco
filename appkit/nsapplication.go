@@ -14,17 +14,8 @@ func (app NSApplication) SharedApplication() NSApplication {
 	return app
 }
 
-func (app NSApplication) SetAppDelegate(delegate NSApplicationDelegate) {
-	panic("implement")
-}
-
 func (app NSApplication) SetActivationPolicy(policy NSApplicationActivationPolicy) bool {
-	selector := "setActivationPolicy:"
-	inv := goco.InvocationWithMethodSignature("NSApplication", selector)
-	inv.SetSelector(selector)
-	inv.SetArgumentAtIndex(unsafe.Pointer(&policy), 2)
-	inv.InvokeWithTarget(app.Ptr)
-	return *(*bool)(inv.GetReturnValue())
+	return *(*bool)(goco.InvokeAndReturn("NSApplication", "setActivationPolicy:", app.Ptr, unsafe.Pointer(&policy)))
 }
 
 func (app NSApplication) ActivateIgnoringOtherApps(flag bool) {
